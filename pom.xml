@@ -17,7 +17,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<repackage.classifier/>
-		<spring-native.version>0.10.0</spring-native.version>
+		<spring-native.version>0.10.1-SNAPSHOT</spring-native.version>
 		<testcontainers.version>1.15.3</testcontainers.version>
 	</properties>
 	<dependencies>
