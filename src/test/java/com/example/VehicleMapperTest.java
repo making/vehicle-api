@@ -60,7 +60,7 @@ class VehicleMapperTest {
 	static class Config {
 		@Bean
 		public VehicleMapper vehicleMapper(JdbcTemplate jdbcTemplate) {
-			return new VehicleMapper(jdbcTemplate);
+			return new VehicleMapperImpl(jdbcTemplate);
 		}
 	}
 }
