@@ -1,5 +1,6 @@
 package com.example;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 		"spring.datasource.url=jdbc:tc:postgresql:11:///vehicle"
 })
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@Disabled
 class VehicleMapperTest {
 	@Autowired
 	VehicleMapper vehicleMapper;
