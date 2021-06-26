@@ -45,6 +45,39 @@ public class VehicleControllerTests {
 	}
 
 	@Test
+	void postVehicle_name_not_greater_than_or_equal() throws Exception {
+		this.mockMvc.perform(post("/vehicles")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"name\":\"a\"}"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value("Bad Request"))
+				.andExpect(jsonPath("$.details.length()").value(1))
+				.andExpect(jsonPath("$.details[0].defaultMessage").value("The size of \"name\" must be greater than or equal to 2. The given size is 1"));
+	}
+
+	@Test
+	void postVehicle_name_not_less_than_or_equal() throws Exception {
+		this.mockMvc.perform(post("/vehicles")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(String.format("{\"name\":\"%s\"}", "a".repeat(101))))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value("Bad Request"))
+				.andExpect(jsonPath("$.details.length()").value(1))
+				.andExpect(jsonPath("$.details[0].defaultMessage").value("The size of \"name\" must be less than or equal to 100. The given size is 101"));
+	}
+
+	@Test
+	void postVehicle_name_not_alphanumerics() throws Exception {
+		this.mockMvc.perform(post("/vehicles")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"name\":\"@@@@\"}"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value("Bad Request"))
+				.andExpect(jsonPath("$.details.length()").value(1))
+				.andExpect(jsonPath("$.details[0].defaultMessage").value("\"name\" must be alphanumerics"));
+	}
+
+	@Test
 	void deleteVehicle() throws Exception {
 		this.mockMvc.perform(delete("/vehicles/1"))
 				.andExpect(status().isNoContent());
