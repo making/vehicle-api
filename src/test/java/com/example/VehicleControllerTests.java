@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,6 +28,7 @@ public class VehicleControllerTests {
 	void getAllVehicles() throws Exception {
 		this.mockMvc.perform(get("/vehicles"))
 				.andExpect(status().isOk())
+				.andExpect(header().string("X-Total-Count", "10"))
 				.andExpect(jsonPath("$.length()").value(2))
 				.andExpect(jsonPath("$[0].id").value(1))
 				.andExpect(jsonPath("$[0].name").value("A"))
@@ -67,6 +69,17 @@ public class VehicleControllerTests {
 	}
 
 	@Test
+	void postVehicle_name_not_null() throws Exception {
+		this.mockMvc.perform(post("/vehicles")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"id\":1, \"name\":\"aaaa\"}"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value("Bad Request"))
+				.andExpect(jsonPath("$.details.length()").value(1))
+				.andExpect(jsonPath("$.details[0].defaultMessage").value("\"id\" must be null"));
+	}
+
+	@Test
 	void postVehicle_name_not_alphanumerics() throws Exception {
 		this.mockMvc.perform(post("/vehicles")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -80,7 +93,7 @@ public class VehicleControllerTests {
 	@Test
 	void deleteVehicle() throws Exception {
 		this.mockMvc.perform(delete("/vehicles/1"))
-				.andExpect(status().isNoContent());
+				.andExpect(status().isOk());
 	}
 
 	@Configuration
@@ -94,8 +107,14 @@ public class VehicleControllerTests {
 		@Bean
 		public VehicleMapper vehicleMapper() {
 			return new VehicleMapper(null) {
+
 				@Override
-				public List<Vehicle> findAll() {
+				public Long count() {
+					return 10L;
+				}
+
+				@Override
+				public List<Vehicle> findAll(String sort, String order, int start, int end) {
 					return List.of(new Vehicle(1, "A"), new Vehicle(2, "B"));
 				}
 
