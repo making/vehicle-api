@@ -1,9 +1,13 @@
 package com.example;
 
 import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.mybatis.scripting.thymeleaf.SqlGenerator;
+
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -11,20 +15,29 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class VehicleMapper {
-	private final JdbcTemplate jdbcTemplate;
+	private final NamedParameterJdbcTemplate jdbcTemplate;
 
-	public VehicleMapper(JdbcTemplate jdbcTemplate) {
+	private final SqlGenerator sqlGenerator;
+
+	public VehicleMapper(NamedParameterJdbcTemplate jdbcTemplate, SqlGenerator sqlGenerator) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.sqlGenerator = sqlGenerator;
 	}
 
-	public List<Vehicle> findAll() {
-		return this.jdbcTemplate.query("SELECT id, name FROM vehicle ORDER BY id", (rs, i) -> new Vehicle(rs.getInt("id"), rs.getString("name")));
+	public List<Vehicle> findAll(String name) {
+		final Map<String, Object> params = new HashMap<>() {
+			{
+				put("name", name);
+			}
+		};
+		final String sql = this.sqlGenerator.generate(FileLoader.load("com/example/VehicleMapper/findAll.sql"), params, params::put);
+		return this.jdbcTemplate.query(sql, params, (rs, i) -> new Vehicle(rs.getInt("id"), rs.getString("name")));
 	}
 
 	@Transactional
 	public Vehicle insert(Vehicle vehicle) {
 		final KeyHolder keyHolder = new GeneratedKeyHolder();
-		this.jdbcTemplate.update(connection -> {
+		this.jdbcTemplate.getJdbcTemplate().update(connection -> {
 			final PreparedStatement statement = connection.prepareStatement("INSERT INTO vehicle(name) VALUES (?)", new String[] { "id" });
 			statement.setString(1, vehicle.getName());
 			return statement;
@@ -35,6 +48,6 @@ public class VehicleMapper {
 
 	@Transactional
 	public int deleteOne(int id) {
-		return this.jdbcTemplate.update("DELETE FROM vehicle WHERE id = ?", id);
+		return this.jdbcTemplate.getJdbcTemplate().update("DELETE FROM vehicle WHERE id = ?", id);
 	}
 }

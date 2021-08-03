@@ -29,7 +29,7 @@ public class VehicleControllerTests {
 
 	@Test
 	void getAllVehicles() throws Exception {
-		given(this.vehicleMapper.findAll())
+		given(this.vehicleMapper.findAll(null))
 				.willReturn(List.of(new Vehicle(1, "A"), new Vehicle(2, "B")));
 		this.mockMvc.perform(get("/vehicles"))
 				.andExpect(status().isOk())

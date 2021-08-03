@@ -1,6 +1,7 @@
 package com.example;
 
 import org.junit.jupiter.api.Test;
+import org.mybatis.scripting.thymeleaf.SqlGenerator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -8,7 +9,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,7 +25,7 @@ class VehicleMapperTest {
 
 	@Test
 	void findAll() {
-		assertThat(this.vehicleMapper.findAll())
+		assertThat(this.vehicleMapper.findAll(null))
 				.containsExactly(new Vehicle(1, "Avalon"),
 						new Vehicle(2, "Corolla"),
 						new Vehicle(3, "Crown"),
@@ -31,6 +33,13 @@ class VehicleMapperTest {
 						new Vehicle(5, "Yaris"),
 						new Vehicle(6, "Vios"),
 						new Vehicle(7, "Glanza"),
+						new Vehicle(8, "Aygo"));
+	}
+
+	@Test
+	void findAllLike() {
+		assertThat(this.vehicleMapper.findAll("A"))
+				.containsExactly(new Vehicle(1, "Avalon"),
 						new Vehicle(8, "Aygo"));
 	}
 
@@ -45,7 +54,7 @@ class VehicleMapperTest {
 	@Test
 	void delete() {
 		assertThat(this.vehicleMapper.deleteOne(2)).isEqualTo(1);
-		assertThat(this.vehicleMapper.findAll())
+		assertThat(this.vehicleMapper.findAll(null))
 				.containsExactly(new Vehicle(1, "Avalon"),
 						new Vehicle(3, "Crown"),
 						new Vehicle(4, "Levin"),
@@ -57,10 +66,11 @@ class VehicleMapperTest {
 
 
 	@Configuration
+	@Import(AppConfig.class)
 	static class Config {
 		@Bean
-		public VehicleMapper vehicleMapper(JdbcTemplate jdbcTemplate) {
-			return new VehicleMapper(jdbcTemplate);
+		public VehicleMapper vehicleMapper(NamedParameterJdbcTemplate jdbcTemplate, SqlGenerator sqlGenerator) {
+			return new VehicleMapper(jdbcTemplate, sqlGenerator);
 		}
 	}
 }
