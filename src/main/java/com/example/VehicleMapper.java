@@ -1,12 +1,11 @@
 package com.example;
 
 import java.sql.PreparedStatement;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.mybatis.scripting.thymeleaf.SqlGenerator;
 
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -25,12 +24,8 @@ public class VehicleMapper {
 	}
 
 	public List<Vehicle> findAll(String name) {
-		final Map<String, Object> params = new HashMap<>() {
-			{
-				put("name", name);
-			}
-		};
-		final String sql = this.sqlGenerator.generate(FileLoader.load("com/example/VehicleMapper/findAll.sql"), params, params::put);
+		final MapSqlParameterSource params = new MapSqlParameterSource().addValue("name", name);
+		final String sql = this.sqlGenerator.generate(FileLoader.load("com/example/VehicleMapper/findAll.sql"), params.getValues(), params::addValue);
 		return this.jdbcTemplate.query(sql, params, (rs, i) -> new Vehicle(rs.getInt("id"), rs.getString("name")));
 	}
 
