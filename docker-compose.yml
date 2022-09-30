@@ -1,10 +1,11 @@
 version: "2"
 services:
   vehicle-db:
-    image: bitnami/postgresql:11.11.0-debian-10-r59
+    image: gvenzl/oracle-xe:slim
     ports:
-    - 5432:5432
+    - 1521:1521
     environment:
-      POSTGRES_DB: vehicle
-      POSTGRES_USER: vehicle
-      POSTGRES_PASSWORD: vehicle
+      ORACLE_DATABASE: vehicle
+      ORACLE_RANDOM_PASSWORD: "true"
+      APP_USER: scott
+      APP_USER_PASSWORD: tiger

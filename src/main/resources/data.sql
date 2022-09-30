@@ -1,8 +1,8 @@
-INSERT INTO vehicle(name) VALUES ('Avalon') ON CONFLICT ON CONSTRAINT vehicle_name_key DO NOTHING;
-INSERT INTO vehicle(name) VALUES ('Corolla') ON CONFLICT ON CONSTRAINT vehicle_name_key DO NOTHING;
-INSERT INTO vehicle(name) VALUES ('Crown') ON CONFLICT ON CONSTRAINT vehicle_name_key DO NOTHING;
-INSERT INTO vehicle(name) VALUES ('Levin') ON CONFLICT ON CONSTRAINT vehicle_name_key DO NOTHING;
-INSERT INTO vehicle(name) VALUES ('Yaris') ON CONFLICT ON CONSTRAINT vehicle_name_key DO NOTHING;
-INSERT INTO vehicle(name) VALUES ('Vios') ON CONFLICT ON CONSTRAINT vehicle_name_key DO NOTHING;
-INSERT INTO vehicle(name) VALUES ('Glanza') ON CONFLICT ON CONSTRAINT vehicle_name_key DO NOTHING;
-INSERT INTO vehicle(name) VALUES ('Aygo') ON CONFLICT ON CONSTRAINT vehicle_name_key DO NOTHING;
+MERGE INTO vehicle v USING (SELECT 1 AS id, 'Avalon' AS name FROM DUAL) t ON (v.id = t.id) WHEN MATCHED THEN UPDATE SET v.name = t.name WHEN NOT MATCHED THEN INSERT (v.id, v.name) VALUES (t.id, t.name);;
+MERGE INTO vehicle v USING (SELECT 2 AS id, 'Corolla' AS name FROM DUAL) t ON (v.id = t.id) WHEN MATCHED THEN UPDATE SET v.name = t.name WHEN NOT MATCHED THEN INSERT (v.id, v.name) VALUES (t.id, t.name);;
+MERGE INTO vehicle v USING (SELECT 3 AS id, 'Crown' AS name FROM DUAL) t ON (v.id = t.id) WHEN MATCHED THEN UPDATE SET v.name = t.name WHEN NOT MATCHED THEN INSERT (v.id, v.name) VALUES (t.id, t.name);;
+MERGE INTO vehicle v USING (SELECT 4 AS id, 'Levin' AS name FROM DUAL) t ON (v.id = t.id) WHEN MATCHED THEN UPDATE SET v.name = t.name WHEN NOT MATCHED THEN INSERT (v.id, v.name) VALUES (t.id, t.name);;
+MERGE INTO vehicle v USING (SELECT 5 AS id, 'Yaris' AS name FROM DUAL) t ON (v.id = t.id) WHEN MATCHED THEN UPDATE SET v.name = t.name WHEN NOT MATCHED THEN INSERT (v.id, v.name) VALUES (t.id, t.name);;
+MERGE INTO vehicle v USING (SELECT 6 AS id, 'Vios' AS name FROM DUAL) t ON (v.id = t.id) WHEN MATCHED THEN UPDATE SET v.name = t.name WHEN NOT MATCHED THEN INSERT (v.id, v.name) VALUES (t.id, t.name);;
+MERGE INTO vehicle v USING (SELECT 7 AS id, 'Glanza' AS name FROM DUAL) t ON (v.id = t.id) WHEN MATCHED THEN UPDATE SET v.name = t.name WHEN NOT MATCHED THEN INSERT (v.id, v.name) VALUES (t.id, t.name);;
+MERGE INTO vehicle v USING (SELECT 8 AS id, 'Aygo' AS name FROM DUAL) t ON (v.id = t.id) WHEN MATCHED THEN UPDATE SET v.name = t.name WHEN NOT MATCHED THEN INSERT (v.id, v.name) VALUES (t.id, t.name);;

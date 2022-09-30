@@ -1,14 +1,13 @@
 package com.example;
 
-import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.scripting.thymeleaf.SqlGenerator;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,13 +30,10 @@ public class VehicleMapper {
 
 	@Transactional
 	public Vehicle insert(Vehicle vehicle) {
-		final KeyHolder keyHolder = new GeneratedKeyHolder();
-		this.jdbcTemplate.getJdbcTemplate().update(connection -> {
-			final PreparedStatement statement = connection.prepareStatement("INSERT INTO vehicle(name) VALUES (?)", new String[] { "id" });
-			statement.setString(1, vehicle.getName());
-			return statement;
-		}, keyHolder);
-		vehicle.setId(keyHolder.getKey().intValue());
+		final JdbcTemplate template = this.jdbcTemplate.getJdbcTemplate();
+		final Integer id = template.queryForObject("SELECT MAX(id) + 1 FROM vehicle", Integer.class); // TODO sequence
+		this.jdbcTemplate.update("INSERT INTO vehicle(id, name) VALUES(:id, :name)", Map.of("id", id, "name", vehicle.getName()));
+		vehicle.setId(id);
 		return vehicle;
 	}
 
