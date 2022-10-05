@@ -37,6 +37,6 @@ spec:
   serviceClaims:
   - name: vehicle-db
     ref:
-      apiVersion: v1
-      kind: Secret
+      apiVersion: services.apps.tanzu.vmware.com/v1alpha1
+      kind: ResourceClaim
       name: vehicle-db
