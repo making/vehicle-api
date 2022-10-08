@@ -13,3 +13,5 @@ spec:
   type: service
   lifecycle: experimental
   owner: demo
+  providesApis:
+  - vehicle-api
