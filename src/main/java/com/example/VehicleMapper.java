@@ -25,7 +25,7 @@ public class VehicleMapper {
 
 	public List<Vehicle> findAll(String name) {
 		final MapSqlParameterSource params = new MapSqlParameterSource().addValue("name", name);
-		final String sql = this.sqlGenerator.generate(FileLoader.load("com/example/VehicleMapper/findAll.sql"), params.getValues(), params::addValue);
+		final String sql = this.sqlGenerator.generate(FileLoader.loadSqlAsString("com/example/VehicleMapper/findAll.sql"), params.getValues(), params::addValue);
 		return this.jdbcTemplate.query(sql, params, (rs, i) -> new Vehicle(rs.getInt("id"), rs.getString("name")));
 	}
 

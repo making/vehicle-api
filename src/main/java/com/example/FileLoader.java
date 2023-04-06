@@ -13,9 +13,14 @@ import org.springframework.util.StreamUtils;
 public class FileLoader {
 	private static final Map<String, String> cache = new ConcurrentHashMap<>();
 
-	public static String load(String file) {
+	public static String loadSqlAsString(String file) {
+		return "/* %s */ %s".formatted(file, loadAsString(file));
+	}
+
+	public static String loadAsString(String file) {
 		return cache.computeIfAbsent(file, f -> {
-			try (final InputStream stream = new ClassPathResource(file).getInputStream()) {
+			try (final InputStream stream = new ClassPathResource(file)
+					.getInputStream()) {
 				return StreamUtils.copyToString(stream, StandardCharsets.UTF_8);
 			}
 			catch (IOException e) {
