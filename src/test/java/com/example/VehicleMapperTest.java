@@ -3,6 +3,7 @@ package com.example;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mybatis.scripting.thymeleaf.SqlGenerator;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -20,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 		"spring.datasource.url=jdbc:tc:postgresql:11:///vehicle"
 })
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Disabled("testcontainers does not work in TAP out of the box")
+@Testcontainers(disabledWithoutDocker = true)
 class VehicleMapperTest {
 	@Autowired
 	VehicleMapper vehicleMapper;

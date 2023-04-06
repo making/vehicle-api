@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.3</version>
+		<version>3.0.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
@@ -15,15 +15,31 @@
 	<name>vehicle-api</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<repackage.classifier/>
 		<testcontainers.version>1.17.3</testcontainers.version>
+		<snakeyaml.version>2.0</snakeyaml.version>
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>co.elastic.logging</groupId>
+			<artifactId>logback-ecs-encoder</artifactId>
+			<version>1.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>am.ik.access-logger</groupId>
+			<artifactId>access-logger</artifactId>
+			<version>0.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>am.ik.util</groupId>
+			<artifactId>database-url-parser</artifactId>
+			<version>0.1.3</version>
+		</dependency>
+		<dependency>
 			<groupId>org.mybatis.scripting</groupId>
 			<artifactId>mybatis-thymeleaf</artifactId>
-			<version>1.0.3</version>
+			<version>1.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -50,8 +66,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.6.11</version>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.1.0</version>
 		</dependency>
 
 		<dependency>
@@ -69,26 +85,26 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.testcontainers</groupId>-->
-<!--			<artifactId>junit-jupiter</artifactId>-->
-<!--			<scope>test</scope>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>org.testcontainers</groupId>-->
-<!--			<artifactId>postgresql</artifactId>-->
-<!--			<scope>test</scope>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
-<!--			<dependency>-->
-<!--				<groupId>org.testcontainers</groupId>-->
-<!--				<artifactId>testcontainers-bom</artifactId>-->
-<!--				<version>${testcontainers.version}</version>-->
-<!--				<type>pom</type>-->
-<!--				<scope>import</scope>-->
-<!--			</dependency>-->
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers-bom</artifactId>
+				<version>${testcontainers.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -106,9 +122,12 @@
 				</executions>
 				<configuration>
 					<additionalProperties>
-						<spring.boot.version>${project.parent.version}</spring.boot.version>
-						<spring.framework.version>${spring-framework.version}</spring.framework.version>
-						<spring.security.version>${spring-security.version}</spring.security.version>
+						<spring.boot.version>${project.parent.version}
+						</spring.boot.version>
+						<spring.framework.version>${spring-framework.version}
+						</spring.framework.version>
+						<spring.security.version>${spring-security.version}
+						</spring.security.version>
 					</additionalProperties>
 				</configuration>
 			</plugin>
