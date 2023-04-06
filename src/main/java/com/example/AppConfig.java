@@ -13,7 +13,7 @@ public class AppConfig {
 	@Bean
 	public SqlGenerator sqlGenerator() {
 		final SqlGeneratorConfig config = SqlGeneratorConfig.newInstanceWithCustomizer(c ->
-				c.getDialect().setBindVariableRender(SPRING_NAMED_PARAMETER.getType()));
+				c.getDialect().setBindVariableRenderInstance(SPRING_NAMED_PARAMETER));
 		return new SqlGenerator(config);
 	}
 }
