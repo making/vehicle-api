@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 import static org.mybatis.scripting.thymeleaf.processor.BindVariableRender.BuiltIn.SPRING_NAMED_PARAMETER;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class AppConfig {
 	@Bean
 	public SqlGenerator sqlGenerator() {
@@ -34,8 +34,8 @@ public class AppConfig {
 		return registry -> registry.config() //
 				.meterFilter(MeterFilter.deny(id -> {
 					final String uri = id.getTag("uri");
-					return uri == null || uri.equals("/readyz") || uri.equals("/livez")
-						   || uri.startsWith("/actuator") || uri.startsWith("/_static");
+					return uri != null && (uri.equals("/readyz") || uri.equals("/livez")
+										   || uri.startsWith("/actuator") || uri.startsWith("/_static"));
 				}));
 	}
 }
