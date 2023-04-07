@@ -1,9 +1,12 @@
 package com.example;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.PreparedStatement;
 import java.util.List;
 
 import org.mybatis.scripting.thymeleaf.SqlGenerator;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -18,6 +21,17 @@ public class VehicleMapper {
 
 	private final SqlGenerator sqlGenerator;
 
+	private final SecureRandom random;
+
+	{
+		try {
+			this.random = SecureRandom.getInstance("SHA1PRNG");
+		}
+		catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public VehicleMapper(NamedParameterJdbcTemplate jdbcTemplate, SqlGenerator sqlGenerator) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.sqlGenerator = sqlGenerator;
@@ -25,6 +39,10 @@ public class VehicleMapper {
 
 	public List<Vehicle> findAll(String name) {
 		final MapSqlParameterSource params = new MapSqlParameterSource().addValue("name", name);
+		if (this.random.nextInt(1000) == 42) {
+			LoggerFactory.getLogger(VehicleMapper.class).info("Hit the lucky number!");
+			params.addValue("sleep", true);
+		}
 		final String sql = this.sqlGenerator.generate(FileLoader.loadSqlAsString("com/example/VehicleMapper/findAll.sql"), params.getValues(), params::addValue);
 		return this.jdbcTemplate.query(sql, params, (rs, i) -> new Vehicle(rs.getInt("id"), rs.getString("name")));
 	}

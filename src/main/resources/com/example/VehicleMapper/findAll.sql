@@ -1,4 +1,8 @@
-SELECT id, name
+SELECT id
+     , name
+    /*[# th:if="${sleep}"]*/
+     , pg_sleep(0.2)
+    /*[/]*/
 FROM vehicle
 WHERE 1 = 1
     /*[# th:if="${name} != null"]*/
