@@ -1,7 +1,7 @@
 SELECT id
      , name
     /*[# th:if="${sleep}"]*/
-     , pg_sleep(0.2)
+     , pg_sleep(0.2) /* You spotted me :) */
     /*[/]*/
 FROM vehicle
 WHERE 1 = 1
